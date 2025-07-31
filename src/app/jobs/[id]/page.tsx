@@ -1,4 +1,3 @@
-import GoogleLocation from "@/components/GoogleLocation";
 import { prisma } from "@/providers/prisma";
 import Image from "next/image";
 import Link from "next/link";
@@ -100,7 +99,6 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
           <ApplyButton jobId={job.id}/>
         </div>
       </div>
-      {/* <GoogleLocation/> */}
     </div>
   );
 };
