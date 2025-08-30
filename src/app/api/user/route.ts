@@ -61,145 +61,166 @@ export async function POST(request: Request) {
 };
 
 
-const secretkey = process.env.JWT_SECRET;
-const sessionKey = new TextEncoder().encode(secretkey);
+// const secretkey = process.env.JWT_SECRET;
+// const sessionKey = new TextEncoder().encode(secretkey);
 
-export async function createSession(user: { id: string; name: string; email: string; }) {
-    const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
-    const session = await encrypt({user, expires});
-    (await cookies()).set("session", session, { expires, httpOnly: true, secure: true, sameSite: "strict" });
-    return session;
-}
-
-
-type SessionPayload = {
-    user: {
-        id: string;
-        name: string;
-        email: string;
-    };
-    expires: Date;
-}
+// export async function createSession(user: { id: string; name: string; email: string; }) {
+//     const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
+//     const session = await encrypt({user, expires});
+//     (await cookies()).set("session", session, { expires, httpOnly: true, secure: true, sameSite: "strict" });
+//     return session;
+// }
 
 
-export async function encrypt(payload: SessionPayload): Promise<string> {
-    return await new SignJWT(payload)
-        .setProtectedHeader({ alg: "HS256" })
-        .setIssuedAt()
-        .setExpirationTime("1h")
-        .sign(sessionKey);
-};
-
-export async function decrypt(session: string): Promise<any> {
-    const { payload } = await jwtVerify(session, sessionKey, {
-        algorithms: ["HS256"],
-    });
-    return payload;
-}
-
-const loginSchema = z.object({
-    email: z.string().min(1, "Email is required").max(50, "Email must be less than 50 characters").email("Invalid email address"),
-    password: z.string().min(6, "Password must be at least 6 characters long"),
-});
+// type SessionPayload = {
+//     user: {
+//         id: string;
+//         name: string;
+//         email: string;
+//     };
+//     expires: Date;
+// }
 
 
-export const login =  async (formData: FormData) => {
-    const email = formData.get("email");
-    const password =  formData.get("password");
+// export async function encrypt(payload: SessionPayload): Promise<string> {
+//     return await new SignJWT(payload)
+//         .setProtectedHeader({ alg: "HS256" })
+//         .setIssuedAt()
+//         .setExpirationTime("1h")
+//         .sign(sessionKey);
+// };
 
-    if (!email || !password) {
-        return { error: "Email and password are required" };
-    };
+// export async function decrypt(session: string): Promise<any> {
+//     const { payload } = await jwtVerify(session, sessionKey, {
+//         algorithms: ["HS256"],
+//     });
+//     return payload;
+// }
 
-    const userData = loginSchema.safeParse({ email, password });
+// const loginSchema = z.object({
+//     email: z.string().min(1, "Email is required").max(50, "Email must be less than 50 characters").email("Invalid email address"),
+//     password: z.string().min(6, "Password must be at least 6 characters long"),
+// });
 
-    if (!userData.success) {
-        const errors = userData.error.flatten().fieldErrors;
-        return { error: errors.email?.[0] || errors.password?.[0] || "Invalid input" };
-    }
 
-    const { email: validEmail, password: validPassword } = userData.data;
+// export const login =  async (formData: FormData) => {
+//     const email = formData.get("email");
+//     const password =  formData.get("password");
 
-    try {
+//     if (!email || !password) {
+//         return { error: "Email and password are required" };
+//     };
 
-        const user = await prisma.user.findUnique({ where: { email: validEmail } });
-        if (!user) {
-            return { error: "User not found" };
-        };
+//     const userData = loginSchema.safeParse({ email, password });
 
-        const isValidPassword = await bcrypt.compare(validPassword, user.password || "");
-        if (!isValidPassword) {
-            return { error: "Invalid credentials" };
-        }
+//     if (!userData.success) {
+//         const errors = userData.error.flatten().fieldErrors;
+//         return { error: errors.email?.[0] || errors.password?.[0] || "Invalid input" };
+//     }
 
-        try {
-            // await signIn("credentials", { redirect: false, email: validEmail, password: validPassword });
-            // const successfull = await createSession({ id: user.id, name: user.name || "", email: user.email || "" }); // Replace with actual user data
+//     const { email: validEmail, password: validPassword } = userData.data;
 
-        } catch (error: any) {
-            if(error.message.includes("CredentialsSignin")){
-                return { error: "Invalid credentials" };
-            }
-            throw error;
-        }
+//     try {
 
-    } catch (error) {
-        console.log(error);
-        return { error: "Failed to login" };
-    }
+//         const user = await prisma.user.findUnique({ where: { email: validEmail } });
+//         if (!user) {
+//             return { error: "User not found" };
+//         };
 
-    redirect("/");
-};
+//         const isValidPassword = await bcrypt.compare(validPassword, user.password || "");
+//         if (!isValidPassword) {
+//             return { error: "Invalid credentials" };
+//         }
 
-export async function logout1(){
-    (await cookies()).set("session", "", { expires: new Date(0), httpOnly: true, secure: true, sameSite: "strict" });
-};
+//         try {
+//             await signIn("credentials", { redirect: false, email: validEmail, password: validPassword });
+//             const successfull = await createSession({ id: user.id, name: user.name || "", email: user.email || "" }); // Replace with actual user data
 
-export async function getSession(){
-    const cookieStore = await cookies();
-    const session = cookieStore.get("session")?.value;
+//         } catch (error: any) {
+//             if(error.message.includes("CredentialsSignin")){
+//                 return { error: "Invalid credentials" };
+//             }
+//             throw error;
+//         }
 
-    if(!session) return null;
+//     } catch (error) {
+//         console.log(error);
+//         return { error: "Failed to login" };
+//     }
 
-    try {
-        const data = await decrypt(session);
+//     redirect("/");
+// };
 
-        if(new Date(data.expires) > new Date()){
-            return data;
-        }
+// export async function logout1(){
+//     (await cookies()).set("session", "", { expires: new Date(0), httpOnly: true, secure: true, sameSite: "strict" });
+// };
+
+// export async function getSession(){
+//     const cookieStore = await cookies();
+//     const session = cookieStore.get("session")?.value;
+
+//     if(!session) return null;
+
+//     try {
+//         const data = await decrypt(session);
+
+//         if(new Date(data.expires) > new Date()){
+//             return data;
+//         }
         
-        if(new Date(data.expires) < new Date()){
-            return await updateSession(Request as unknown as NextRequest);
-        }
+//         if(new Date(data.expires) < new Date()){
+//             return await updateSession(Request as unknown as NextRequest);
+//         }
 
-        logout1();
-        return null;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-}
+//         logout1();
+//         return null;
+//     } catch (error) {
+//         console.log(error);
+//         return null;
+//     }
+// }
 
-export async function updateSession(request: NextRequest){
-    const session = request.cookies.get("session")?.value || (await cookies()).get("session")?.value;
-    if(!session) return null;
+// export async function updateSession(request: NextRequest){
+//     const session = request.cookies.get("session")?.value || (await cookies()).get("session")?.value;
+//     if(!session) return null;
 
-    try {
-        const data = await decrypt(session);
-        if(new Date(data.expires) > new Date()){
-            const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
-            const newSession = await encrypt({user: data.user, expires});
-            const response = NextResponse.next();
-            response.cookies.set("session", newSession, { expires, httpOnly: true, secure: true, sameSite: "strict" });
-            return response;
-        }
-        logout1();
-        return null;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-}
+//     try {
+//         const data = await decrypt(session);
+//         if(new Date(data.expires) > new Date()){
+//             const expires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
+//             const newSession = await encrypt({user: data.user, expires});
+//             const response = NextResponse.next();
+//             response.cookies.set("session", newSession, { expires, httpOnly: true, secure: true, sameSite: "strict" });
+//             return response;
+//         }
+//         logout1();
+//         return null;
+//     } catch (error) {
+//         console.log(error);
+//         return null;
+//     }
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
