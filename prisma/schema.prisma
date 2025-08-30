@@ -33,6 +33,7 @@ model User {
   name String?
   email String? @unique
   emailVerified DateTime?
+  password String? @db.Text // Store hashed password
   image String?
   accounts Account[]
   sessions Session[]
@@ -64,12 +65,18 @@ model Job {
   type String
   description String @db.Text
   salary String?
+  experience String?
+  requirements String?
+  lat Float?
+  lng Float?
 
   postedAt DateTime @default(now())
+  deadline DateTime?
   postedBy User @relation("PostedJobs", fields: [postedById], references: [id])
   postedById String
 
   applications Application[]
+  // locations Location[]
 }
 
 model Application {
@@ -84,3 +91,13 @@ model Application {
 
   @@unique([jobId, userId])
 }
+
+// model Location {
+//   id String @id @default(cuid())
+//   locationTitle String
+//   lat Float
+//   lng Float
+//   job Job @relation(fields: [jobId], references: [id])
+//   jobId String
+//   createdAt DateTime @default(now())
+// }

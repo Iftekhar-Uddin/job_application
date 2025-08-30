@@ -1,35 +1,37 @@
 "use client"
-import { logout } from "@/providers/auth";
-import { useSession } from "next-auth/react";
-// import { useRouter } from "next/router";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import { useRouter } from "next/navigation"; // this is used for app router/use client components
 
 
 const Navbar = () => {
-  const {data: session} =  useSession();
-  // const router = useRouter();
-  // console.log(session)
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
   return (
-    <nav className="mx-auto max-w-7xl bg-white rounded-lg h-16">
-      <div className="flex h-full justify-between items-center px-4 ">
+    <nav className="mx-auto max-w-7xl bg-white rounded-lg h-12">
+      <div className="flex h-full justify-between items-center px-4">
         <div className="">
           <Link href={"/"} className="flex items-center gap-2">
             <Image
               className="w-auto"
               src={"/job.png"}
               alt="Job logo"
-              height={40}
-              width={40}
+              height={32}
+              width={32}
             />
             <span className="text-xl font-semibold text-cyan-700">
               Job Board
             </span>
           </Link>
         </div>
-        <div className={`grid gap-x-8 ${session ? "grid-cols-4" : "grid-cols-2 gap-x-4"}`}>
-          {session ? (
+        <div className={`grid gap-x-8 ${session?.user ? "grid-cols-4" : "grid-cols-2 gap-x-4"}`}>
+          { status === "loading" ? (
+            <>
+            </>
+          ): (
+            status === "authenticated" &&  
             <>
               <Link
                 href={"/jobs"}
@@ -56,17 +58,18 @@ const Navbar = () => {
                 About
               </Link> */}
               <button
-                onClick={() => {logout(),
-                  setTimeout(() => {
-                    window.location.reload();
-                  }, 500);
+                onClick={() => {
+                  signOut();
+                  router.push("/");
                 }}
                 className="text-gray-600 cursor-pointer hover:text-cyan-800 font-medium rounded-md active:underline"
               >
                 Sign Out
               </button>
             </>
-          ) : (
+            
+          )}
+          {!session && (
             <>
               <Link
                 href={"/jobs"}

@@ -1,19 +1,24 @@
-import { prisma } from "@/providers/prisma";
+import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getPriority } from "os";
-import React from "react";
 import ApplyButton from "./ApplyButton";
+import { auth } from "@/lib/auth";
+import { formatDistanceToNow } from "date-fns";
+// import { useSession } from "next-auth/react";
 
 const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
+
+  const session = await auth();
+  console.log(session);
+
   const jobId = (await params).id;
 
   const job = await prisma.job.findUnique({
     where: { id: jobId },
     include: { postedBy: true },
   });
-
 
   if (!job) {
     notFound();
@@ -29,7 +34,7 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
           >
             Goto Back
           </Link>
-          <h2 className="text-red-400 text-lg">DeadLine: 21/12/2025</h2>
+          <h2 className="text-red-400 text-lg">DeadLine: {new Date(job?.deadline as Date).toLocaleDateString('en-GB')}</h2>
         </div>
 
         <div className="flex w-full">
@@ -48,8 +53,7 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
                   {job.salary}
                 </p>
                 <p className="font-semibold text-blue-700 text-lg">
-                  <span>Experience: </span>
-                  Null
+                  <span>Experience: {job?.experience? job?.experience : "Fresher"} </span>
                 </p>
               </div>
               <div className="space-y-2 w-1/2">
@@ -63,8 +67,7 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </p>
                 <p className="text-[min(10vw, 120px)] text-gray-600 ">
                   <span className="underline ">Requirements:</span>
-                  &nbsp;Next.js, React.Js, Node.js, JavaScript, TypeScript,
-                  Tailwind Css
+                  &nbsp;{job?.requirements}
                 </p>
               </div>
             </div>
@@ -82,9 +85,9 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
                   priority={!!getPriority}
                 />
               )}
-              <p className="text-gray-500">
+              <p className="font-sans text-xs">
                 <span className="">PostedBy: </span>
-                {job.postedBy.name}
+                {job?.postedBy?.name}
               </p>
             </div>
           </div>
@@ -92,11 +95,11 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
 
         <p className="pt-4 text-lg text-gray-600 grid-cols-1 grid">
           <span className="text-black font-semibold">Description: </span>
-          {job.description}
+          {job?.description}
         </p>
 
         <div className="flex justify-end">
-          <ApplyButton jobId={job.id}/>
+          <ApplyButton jobId={job.id} />
         </div>
       </div>
     </div>

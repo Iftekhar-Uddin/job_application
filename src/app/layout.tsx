@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import SessionProvider from "@/providers/SessionProvider";
-import { auth } from "../../auth";
-
+import { SessionProvider } from "next-auth/react";
 
 export const metadata: Metadata = {
   title: "Job_Application",
@@ -16,12 +14,10 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
 
-  const session = await auth();
-
   return (
     <html lang="en">
       <body className="">
-        <SessionProvider session={session}>
+        <SessionProvider>
           <div className="min-h-screen bg-cyan-600 py-8">
             <Navbar />
             <main className="container mx-auto px-4 py-4">{children}</main>
@@ -30,4 +26,5 @@ export default async function RootLayout({
       </body>
     </html>
   );
+  
 }

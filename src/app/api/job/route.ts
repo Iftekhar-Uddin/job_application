@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
-import { auth } from "../../../../auth";
-import { prisma } from "@/providers/prisma";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
 
 export async function POST(request: Request) {
+
   const session = await auth();
 
   if (!session?.user || !session.user.id) {

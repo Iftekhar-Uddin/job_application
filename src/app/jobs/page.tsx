@@ -1,10 +1,13 @@
-import { prisma } from "@/providers/prisma";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import React from "react";
 
-const TotalJobs = async ({searchParams}: {searchParams: Promise<{[key: string]: string | string[] | undefined}>}) => {
+const TotalJobs = async ({ searchParams }: { searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) => {
+  const session = await auth()
+  console.log(session)
 
-  const {query, type, location} = await searchParams;
+  const { query, type, location } = await searchParams;
   const querys = query as string | undefined;
   const searchType = type as string | undefined;
   const searchLocation = location as string | undefined;
@@ -14,12 +17,12 @@ const TotalJobs = async ({searchParams}: {searchParams: Promise<{[key: string]: 
       AND: [
         querys
           ? {
-              OR: [
-                { title: { contains: querys, mode: "insensitive" } },
-                { company: { contains: querys, mode: "insensitive" } },
-                { description: { contains: querys, mode: "insensitive" } },
-              ]
-            }
+            OR: [
+              { title: { contains: querys, mode: "insensitive" } },
+              { company: { contains: querys, mode: "insensitive" } },
+              { description: { contains: querys, mode: "insensitive" } },
+            ]
+          }
           : {},
         type ? { type: searchType } : {},
         searchLocation
@@ -30,7 +33,6 @@ const TotalJobs = async ({searchParams}: {searchParams: Promise<{[key: string]: 
     orderBy: { postedAt: "desc" },
     include: { postedBy: true },
   });
-
 
   return (
     <div className="">
@@ -73,11 +75,16 @@ const TotalJobs = async ({searchParams}: {searchParams: Promise<{[key: string]: 
         <h1 className="text-3xl text-center text-cyan-700 mb-4 underline">
           Available Jobs
         </h1>
-        <div className="grid md:grid-cols-1 md:gap-6 lg:grid-cols-2 xl:grid-cols-3 justify-items-center items-center py-4 h-[520px] overflow-y-scroll">
+        <div className={`${jobs.length === 0 ? "flex items-center" : "grid gap-y-4 md:grid-cols-1 md:gap-6 lg:grid-cols-2 xl:grid-cols-3 items-start"} justify-items-center-safe py-4 h-[520px] overflow-y-scroll`}>
+          {jobs.length === 0 &&
+            <div className="w-full flex justify-center">
+              <h1 className="text-4xl text-yellow-400 bg-cyan-700 p-4 rounded-lg">No jobs found. Please try again!</h1>
+            </div>
+          }
           {jobs.map((job) => (
             <div
               key={job.id}
-              className="max-w-sm min-w-xs ring-1 ring-cyan-700 rounded-lg p-4 gap-x-4 gap-y-2"
+              className="max-w-sm min-w-sm ring-1 ring-cyan-700 rounded-lg p-4 gap-x-4 gap-y-2"
             >
               <div className="flex w-full justify-between">
                 <h1 className="font-bold text-xl">{job.title}</h1>
@@ -97,7 +104,7 @@ const TotalJobs = async ({searchParams}: {searchParams: Promise<{[key: string]: 
                 </div>
                 <div className="">
                   <h2 className="text-amber-600">Salary: {job.salary}</h2>
-                  <p className="text-teal-600">Exp: 2-3 years</p>
+                  <p className="text-teal-600">Exp: {job.experience}</p>
                 </div>
               </div>
             </div>
@@ -109,4 +116,3 @@ const TotalJobs = async ({searchParams}: {searchParams: Promise<{[key: string]: 
 };
 
 export default TotalJobs;
-

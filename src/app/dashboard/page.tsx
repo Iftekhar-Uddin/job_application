@@ -1,72 +1,69 @@
-import React from 'react'
-import { auth } from '../../../auth'
 import { redirect } from 'next/navigation';
-import { prisma } from '@/providers/prisma';
+import { prisma } from '@/lib/prisma';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
+import { auth } from '@/lib/auth';
+
 
 const DashboardPage = async () => {
-    const session = await auth();
+  const session = await auth();
 
-    if(!session){
-        redirect("/auth/signin")
-    };
+  if (!session) {
+    redirect("/")
+  };
 
-    const [applications, postedJobs] = await Promise.all([
-        
-        prisma.application.findMany({
-            where: {
-                userId: session?.user?.id
-            },
-            include: {
-                job: {
-                    include: {
-                        postedBy: true,
-                    }
-                }
-            },
-            orderBy: {
-                appliedAt: "desc"
-            },
-        }),
+  const [ postedJobs, applications ] = await Promise.all([
+    prisma.job.findMany({
+      where: {
+        postedById: session.user?.id
+      },
+      include: {
+        _count: {
+          select: {
+            applications: true,
+          }
+        }
+      },
+      orderBy: {
+        postedAt: "desc"
+      },
+    }),
 
-        prisma.job.findMany({
-            where: {
-                postedById: session.user?.id
-            },
-            include: {
-                _count: {
-                    select: {
-                        applications: true,
-                    }
-                }
-            },
-            orderBy: {
-                postedAt: "desc"
-            },
-        }),
-
-    ]);
+    prisma.application.findMany({
+      where: {
+        userId: session?.user?.id
+      },
+      include: {
+        job: {
+          include: {
+            postedBy: true,
+          }
+        }
+      },
+      orderBy: {
+        appliedAt: "desc"
+      },
+    }),
+    
+  ]);
 
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="bg-white rounded-xl flex flex-col mb-2 pt-2">
+    <div className="max-w-7xl mx-auto rounded-md sm:px-6 lg:px-0 h-[calc(100vh-10rem)]">
+      <div className="bg-white rounded-lg flex flex-col mb-3 pt-1">
         <h1 className="text-3xl font-bold text-cyan-700 flex justify-center">
           Dashboard
         </h1>
-        <div className="flex justify-around items-center mb-2">
+        <div className="flex justify-around items-center pb-2">
           <h2 className="text-xl text-amber-500  underline">Available Jobs</h2>
-          <h2 className="text-xl text-green-600  underline">
-            Your Applications
-          </h2>
+          <h2 className="text-xl text-green-600  underline">Your Applications</h2>
         </div>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
+      <div className="grid gap-4 md:grid-cols-2">
         {/* Posted Jobs Section */}
-        <div>
-          <div className="bg-white rounded-lg shadow-sm divide-y divide-gray-300">
+        <div className='bg-white rounded-lg shadow-sm px-2 h-[calc(100dvh-12rem)]'>
+          <div className="h-full divide-y divide-gray-300 overflow-y-scroll">
             {postedJobs.length === 0 ? (
               <p className="p-6 text-gray-500 text-center">
                 You haven't posted any jobs yet.
@@ -113,8 +110,8 @@ const DashboardPage = async () => {
         </div>
 
         {/* Applications Section */}
-        <div>
-          <div className="bg-white rounded-lg shadow-sm divide-y divide-gray-200">
+        <div className='bg-white rounded-lg shadow-sm px-2 h-[calc(100vh-12rem)]'>
+          <div className="h-full divide-y divide-gray-300 overflow-y-scroll ">
             {applications.length === 0 ? (
               <p className="p-6 text-gray-500 text-center">
                 You haven't applied to any jobs yet.
@@ -147,13 +144,12 @@ const DashboardPage = async () => {
                       </div>
                     </div>
                     <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                        application.status === "PENDING"
+                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${application.status === "PENDING"
                           ? "bg-yellow-100 text-yellow-800"
                           : application.status === "ACCEPTED"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
                     >
                       {application.status}
                     </span>
@@ -174,7 +170,7 @@ const DashboardPage = async () => {
       </div>
     </div>
   );
-  
+
 }
 
 export default DashboardPage

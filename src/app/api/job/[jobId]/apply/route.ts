@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/providers/prisma";
-import { auth } from "../../../../../../auth";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+
 
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ jobId: string }> }
 ) {
+
   const session = await auth();
 
   if (!session?.user || !session.user.id) {
@@ -42,8 +44,9 @@ export async function POST(
 
       return NextResponse.json(application);
     }
-    
+
   } catch (error) {
     return new NextResponse("Internal server error", { status: 500 });
   }
+  
 }
