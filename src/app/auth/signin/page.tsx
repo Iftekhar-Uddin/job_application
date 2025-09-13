@@ -31,12 +31,12 @@ const SignInPage = () => {
     {
       return (
         <div className="flex justify-center items-center min-h-[calc(100vh-10rem)]">
-          <div className="grid grid-rows-1 gap-4 max-h-fit w-auto bg-white p-8 rounded-xl">
+          <div className="grid grid-rows-1 md:gap-4 max-h-fit w-auto bg-white p-4 md:p-8 rounded-md md:rounded-xl">
             <div className="flex flex-col items-center">
-              <h1 className="text-cyan-700 font-bold text-4xl">
+              <h1 className="text-cyan-700 font-light md:font-bold text-xl md:text-4xl">
                 Welcome to job portal
               </h1>
-              <div className="flex text-gray-500">
+              <div className="flex text-gray-500 text-sm md:text-base text-center">
                 Sign in to post jobs
                 <br />
                 <div className="flex items-center gap-2">
@@ -49,10 +49,10 @@ const SignInPage = () => {
               </div>
             </div>
             <Signin />
-            <div className="flex py-1 justify-between">
+            <div className="grid grid-rows-2 gap-1.5 items-center justify-center md:flex py-1 md:justify-between">
               <button
                 onClick={googleLogin}
-                className="w-47 flex items-center justify-center gap-1 py-1.5 border border-black bg-black text-green-400 rounded-md hover:text-white hover:border-red-500 transition-colors duration-200 cursor-pointer"
+                className="w-69 md:w-47 flex items-center justify-center gap-1 py-1.5 border border-black bg-black text-green-400 rounded-md hover:text-white hover:border-red-500 transition-colors duration-200 cursor-pointer"
               >
                 {/* <svg
                   className="w-6 h-6"
@@ -70,7 +70,7 @@ const SignInPage = () => {
               </button>
               <button
                 onClick={onGitHubLogin}
-                className="w-47 flex items-center justify-center gap-1 py-1.5 border border-black bg-black text-yellow-400 rounded-md hover:text-white hover:border-red-500 transition-colors duration-200 cursor-pointer"
+                className="w-69 md:w-47 flex items-center justify-center gap-1 py-1.5 border border-black bg-black text-yellow-400 rounded-md hover:text-white hover:border-red-500 transition-colors duration-200 cursor-pointer"
               >
                 <svg
                   className="w-6 h-6"
@@ -87,8 +87,8 @@ const SignInPage = () => {
                 <span className="text-base font-medium">Continue with GitHub</span>
               </button>
             </div>
-            <div className="flex min-w-full justify-center">
-              <p className="w-88 text-sm text-center">
+            <div className="flex max-w-88 justify-center mt-2">
+              <p className="w-full text-center text-xs md:text-sm ">
                 By signing in, you agree to&nbsp;
                 <a href="#" className="text-blue-600 hover:text-indigo-500">
                   Terms of Service

@@ -54,7 +54,7 @@ export default async function Home() {
                 <span className="text-teal-700">{job.type}</span>
               </div>
               <p className="text-gray-600 mb-4 line-clamp-2">
-                {job.description}
+                {job?.responsibilities}
               </p>
               <Link
                 href={`/jobs/${job.id}`}

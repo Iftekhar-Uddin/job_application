@@ -3,17 +3,37 @@ import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation"; // this is used for app router/use client components
+import { useState } from "react";
 
 
 const Navbar = () => {
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleClick = () => {
+    setIsOpen(!isOpen);
+    // const nav = document.querySelector('ul');
+    // if (nav) {
+    //   nav.classList.toggle('top-16');
+    //   nav.classList.toggle('top-[-490px]');
+    // }
+
+    // const spans = document.querySelectorAll('button span');
+    // spans.forEach((span) => {
+    //   span.classList.toggle('bg-orange-500');
+    //   span.classList.toggle('bg-cyan-700');
+    // });
+
+  };
 
   return (
-    <nav className="mx-auto max-w-7xl bg-white rounded-lg h-12">
-      <div className="flex h-full justify-between items-center px-4">
-        <div className="">
-          <Link href={"/"} className="flex items-center gap-2">
+    <nav className="mx-auto max-w-7xl bg-white rounded-lg h-12 md:h-16 sticky top-0 z-auto">
+      <div className="flex w-full h-full justify-center items-center px-6">
+
+        <div className="flex items-center justify-between w-full">
+
+          <Link href={"/"} className="flex items-center gap-1 md:gap-2">
             <Image
               className="w-auto"
               src={"/job.png"}
@@ -21,71 +41,36 @@ const Navbar = () => {
               height={32}
               width={32}
             />
-            <span className="text-xl font-semibold text-cyan-700">
+            <span className="md:text-xl font-semibold text-cyan-700">
               Job Board
             </span>
           </Link>
+
+          <button onClick={handleClick} className="cursor-pointer bg-transparent md:hidden block border-0 z-10">
+            <span className={`${isOpen ? "first:transform translate-y-2 rotate-45" : ""} block w-6 h-1 my-1 md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
+            <span className={`${isOpen ? "even:opacity-0" : ""} block w-6 h-1 my-1 mt-auto md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
+            <span className={`${isOpen ? "last:transform -translate-y-2 -rotate-45" : ""} block w-6 h-1 my-1 md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
+          </button>
+
+          <ul className={`flex flex-col md:flex-row gap-3 md:gap-4 items-center absolute md:static top-12.5 right-0.5 w-48 rounded-sm md:w-auto bg-white md:bg-transparent py-2 md:py-0 px-2 md:px-0 shadow-md md:shadow-none transition-all duration-500 ease-in" ${isOpen ? 'top-10' : 'top-[-490px]'}`}>
+            {!session ? (
+              <>
+                <Link href={"/jobs"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Browse Jobs</Link>
+                <Link href={"/auth/signin"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Sign In</Link>
+              </>
+            ) : (
+              <>
+                <Link href={"/jobs"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Browse Jobs</Link>
+                <Link href={"/jobs/post"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Post a job</Link>
+                <Link href={"/dashboard"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Dashboard</Link>
+                <Link href={"/about"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">About</Link>
+                <button onClick={() => { signOut(); router.push("/") }} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Sign Out</button>
+              </>
+            )}
+          </ul>
+
         </div>
-        <div className={`grid gap-x-8 ${session?.user ? "grid-cols-4" : "grid-cols-2 gap-x-4"}`}>
-          { status === "loading" ? (
-            <>
-            </>
-          ): (
-            status === "authenticated" &&  
-            <>
-              <Link
-                href={"/jobs"}
-                className="text-gray-600 hover:text-cyan-800 font-medium rounded-md active:underline"
-              >
-                Browse Jobs
-              </Link>
-              <Link
-                href={"/jobs/post"}
-                className="text-gray-600 hover:text-cyan-800 font-medium rounded-md active:underline"
-              >
-                Post a job
-              </Link>
-              <Link
-                href={"/dashboard"}
-                className="text-gray-600 hover:text-cyan-800 font-medium rounded-md active:underline"
-              >
-                Dashboard
-              </Link>
-              {/* <Link
-                href={"/About"}
-                className="text-gray-600 hover:text-cyan-800 font-medium rounded-md active:underline"
-              >
-                About
-              </Link> */}
-              <button
-                onClick={() => {
-                  signOut();
-                  router.push("/");
-                }}
-                className="text-gray-600 cursor-pointer hover:text-cyan-800 font-medium rounded-md active:underline"
-              >
-                Sign Out
-              </button>
-            </>
-            
-          )}
-          {!session && (
-            <>
-              <Link
-                href={"/jobs"}
-                className="text-gray-600 hover:text-cyan-800 font-medium rounded-md active:underline"
-              >
-                Browse Jobs
-              </Link>
-              <Link
-                href={"/auth/signin"}
-                className="text-gray-600 hover:text-cyan-800 font-medium rounded-md active:underline"
-              >
-                Sign In
-              </Link>
-            </>
-          )}
-        </div>
+
       </div>
     </nav>
   );

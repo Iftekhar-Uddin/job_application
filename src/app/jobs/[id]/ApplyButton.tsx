@@ -76,7 +76,7 @@ const ApplyButton = ({ jobId }: { jobId: string }) => {
   }
 
   if (find) {
-    return <p className="ring-2 px-3 py-1 rounded-full bg-emerald-700 text-white font-sans">Already Applied</p>;
+    return <p className="ring-1 text-green-400 px-3.5 py-1.5 rounded-full bg-black">Already Applied</p>;
   } else {
     return (
       <div className="flex items-center gap-x-4">

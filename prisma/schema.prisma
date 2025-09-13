@@ -63,10 +63,14 @@ model Job {
   company String
   location String
   type String
-  description String @db.Text
+  responsibilities String? @db.Text
   salary String?
   experience String?
-  requirements String?
+  vacancies Int?
+  skills String?
+  education String?
+  benefits String[] @db.Text
+  jobplace String?
   lat Float?
   lng Float?
 
