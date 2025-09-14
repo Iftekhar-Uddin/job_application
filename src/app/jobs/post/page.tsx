@@ -19,14 +19,11 @@ async function geocodeAddress(address: string) {
 }
 
 const PostYourJob = (e:any) => {
-
   const { data: session, status } = useSession();
-
 
   if (status === "unauthenticated") {
     redirect("/auth/signin")
   }
-
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
