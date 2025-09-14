@@ -2,16 +2,14 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getPriority } from "os";
 import ApplyButton from "./ApplyButton";
 import { auth } from "@/lib/auth";
 import { formatDistanceToNow } from "date-fns";
-// import { useSession } from "next-auth/react";
+
 
 const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   const session = await auth();
-
 
   const jobId = (await params).id;
 
@@ -135,85 +133,3 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
 };
 
 export default jobDetails;
-
-
-
-
-{/* <div className="bg-white max-w-7xl mx-auto h-fit rounded-md ">
-  <div className="p-6 grid grid-rows-1 gap-y-8 w-full">
-    <div className="flex justify-between">
-      <Link
-        href={"/jobs"}
-        className="cursor-pointer text-lg text-cyan-800 underline"
-      >
-        Goto Back
-      </Link>
-      <h2 className="text-red-400 text-lg">DeadLine: {new Date(job?.deadline as Date).toLocaleDateString('en-GB')}</h2>
-    </div>
-
-    <div className="flex w-full">
-      <div className="flex flex-col w-3/5">
-        <h1 className="text-2xl font-semibold text-orange-500">
-          {job.title}
-        </h1>
-        <div className="flex justify-between pt-4">
-          <div className="space-y-2">
-            <p className="font-bold">
-              <span>Type: </span>
-              {job.type}
-            </p>
-            <p className="font-semibold text-teal-500 text-lg">
-              <span>Salary: </span>
-              {job.salary}
-            </p>
-            <p className="font-semibold text-blue-700 text-lg">
-              <span>Experience: {job?.experience ? job?.experience : "Null"} </span>
-            </p>
-          </div>
-          <div className="space-y-2 w-1/2">
-            <p className="font-semibold">
-              <span className="">Company: </span>
-              {job.company}
-            </p>
-            <p className="font-semibold">
-              <span>Location: </span>
-              {job.location}
-            </p>
-            <p className="text-[min(10vw, 120px)] text-gray-600 ">
-              <span className="underline ">Requirements:</span>
-              &nbsp;{job?.skills}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="w-2/5 flex justify-end">
-        <div className="">
-          {job.postedBy.image && (
-            <Image
-              className="size-32"
-              src={job.postedBy.image}
-              height={650}
-              width={366}
-              alt=""
-              priority={!!getPriority}
-            />
-          )}
-          <p className="font-sans text-xs">
-            <span className="">PostedBy: </span>
-            {job?.postedBy?.name}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <p className="pt-4 grid-cols-1 grid">
-      <span className="font-semibold">Responsibility & Context: </span>
-      {job?.responsibilities}
-    </p>
-
-    <div className="flex justify-end">
-      <ApplyButton jobId={job.id} />
-    </div>
-  </div>
-</div> */}

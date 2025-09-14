@@ -1,5 +1,4 @@
 "use client";
-
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { FormEvent } from "react";
@@ -19,13 +18,14 @@ async function geocodeAddress(address: string) {
   return { lat, lng }
 }
 
-const PostYourJob = () => {
+const PostYourJob = (e:any) => {
 
   const { data: session, status } = useSession();
 
-  if (!session) {
+
+  if (status === "unauthenticated") {
     redirect("/auth/signin")
-  };
+  }
 
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -76,7 +76,10 @@ const PostYourJob = () => {
     }
   };
 
-  return (
+
+
+  {if(session){
+    return (
     <div className="flex justify-center items-center min-h-[calc(100vh-10rem)]">
       <div className="min-w-xs w-lg mx-auto md:p-4 bg-white rounded-md md:rounded-xl">
         <h1 className="md:text-2xl font-bold text-cyan-700 ml-2 mt-2">Create a job post</h1>
@@ -284,7 +287,9 @@ const PostYourJob = () => {
         </div>
       </div>
     </div>
-  );
+    )}
+  }
+  
 };
 
 export default PostYourJob;

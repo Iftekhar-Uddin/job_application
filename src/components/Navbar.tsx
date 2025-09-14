@@ -28,12 +28,12 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="mx-auto max-w-7xl bg-white rounded-lg h-12 md:h-16 sticky top-0 z-auto">
+    <nav className="mx-auto max-w-7xl bg-white md:rounded-lg h-12 md:h-16 sticky top-0 z-auto">
       <div className="flex w-full h-full justify-center items-center px-6">
 
         <div className="flex items-center justify-between w-full">
 
-          <Link href={"/"} className="flex items-center gap-1 md:gap-2">
+          <Link onClick={()=> setIsOpen(false)} href={"/"} className="flex items-center gap-1 md:gap-2">
             <Image
               className="w-auto"
               src={"/job.png"}
@@ -47,24 +47,24 @@ const Navbar = () => {
           </Link>
 
           <button onClick={handleClick} className="cursor-pointer bg-transparent md:hidden block border-0 z-10">
-            <span className={`${isOpen ? "first:transform translate-y-2 rotate-45" : ""} block w-6 h-1 my-1 md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
+            <span className={`${isOpen ? "first:transform translate-y-2 rotate-45 bg-orange-700" : ""} block w-6 h-1 my-1 md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
             <span className={`${isOpen ? "even:opacity-0" : ""} block w-6 h-1 my-1 mt-auto md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
-            <span className={`${isOpen ? "last:transform -translate-y-2 -rotate-45" : ""} block w-6 h-1 my-1 md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
+            <span className={`${isOpen ? "last:transform -translate-y-2 -rotate-45 bg-orange-700" : ""} block w-6 h-1 my-1 md:bg-cyan-700 transition ease-in-out duration-300 bg-cyan-700`}></span>
           </button>
 
-          <ul className={`flex flex-col md:flex-row gap-3 md:gap-4 items-center absolute md:static top-12.5 right-0.5 w-48 rounded-sm md:w-auto bg-white md:bg-transparent py-2 md:py-0 px-2 md:px-0 shadow-md md:shadow-none transition-all duration-500 ease-in" ${isOpen ? 'top-10' : 'top-[-490px]'}`}>
+          <ul className={`flex flex-col md:flex-row gap-3 md:gap-4 items-center absolute md:static top-11.5 right-0 w-48 md:w-auto bg-white md:bg-transparent py-2 md:py-0 px-2 md:px-0 shadow-md md:shadow-none transition-all duration-500 ease-in" ${isOpen ? 'top-10' : 'top-[-490px]'}`}>
             {!session ? (
               <>
-                <Link href={"/jobs"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Browse Jobs</Link>
-                <Link href={"/auth/signin"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Sign In</Link>
+                <Link onClick={handleClick} href={"/jobs"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Browse Jobs</Link>
+                <Link onClick={handleClick} href={"/auth/signin"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Sign In</Link>
               </>
             ) : (
               <>
-                <Link href={"/jobs"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Browse Jobs</Link>
-                <Link href={"/jobs/post"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Post a job</Link>
-                <Link href={"/dashboard"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Dashboard</Link>
-                <Link href={"/about"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">About</Link>
-                <button onClick={() => { signOut(); router.push("/") }} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Sign Out</button>
+                <Link onClick={handleClick} href={"/jobs"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Browse Jobs</Link>
+                <Link onClick={handleClick} href={"/jobs/post"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Post a job</Link>
+                <Link onClick={handleClick} href={"/dashboard"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Dashboard</Link>
+                <Link onClick={handleClick} href={"/about"} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">About</Link>
+                <button onClick={() => { signOut(); router.push("/"); handleClick() }} className="text-cyan-700 ring-1 rounded-full px-3 transition ease-in-out duration-300 hover:bg-black hover:text-white cursor-pointer">Sign Out</button>
               </>
             )}
           </ul>

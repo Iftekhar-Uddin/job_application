@@ -8,7 +8,7 @@ const SignInPage = () => {
   const { data: session, status } = useSession();
 
   if (session) {
-    window.location.href = "/dashboard";
+    window.location.href = "/";
   }
 
   const googleLogin = async () => {
