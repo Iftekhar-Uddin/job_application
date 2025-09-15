@@ -10,10 +10,9 @@ type DashboardProps = {
 
 
 const Dashboard = ({ postedJobs, applications }: DashboardProps) => {
-
+  
   const [isPostedJob, setIsPostedJob] = useState(true);
   const [isapplications, setIsapplications] = useState(false);
-
 
   const handleAvailableJobs = () => {
     setIsPostedJob(!isPostedJob);
@@ -25,6 +24,7 @@ const Dashboard = ({ postedJobs, applications }: DashboardProps) => {
     setIsPostedJob(!isPostedJob);
   };
 
+  
   return (
     <div className="max-w-7xl mx-auto rounded-md sm:px-6 lg:px-0 h-[calc(100vh-10rem)]">
       <div className="bg-white rounded-lg flex flex-col mb-3 pt-1 font-sans">
@@ -33,12 +33,11 @@ const Dashboard = ({ postedJobs, applications }: DashboardProps) => {
         </h1>
         <div className="flex justify-around items-center pb-2">
           <button onClick={handleAvailableJobs} className={`${isPostedJob ? "underline" : ""}    md:text-xl text-amber-600 text-sm md:underline`}>Available Jobs</button>
-          <button onClick={handleApplications} className={`${isapplications ? "underline" : ""}  md:text-xl text-green-600 text-sm  md:underline`}>Your Applications</button>
+          <button onClick={handleApplications} className={`${isapplications ? "underline" : ""}  md:text-xl text-green-600 text-sm md:underline`}>Your Applications</button>
         </div>
       </div>
 
       <div className="grid gap-2 md:grid-cols-2">
-
         {/* Posted Jobs Section */}
         
         <div className='bg-white rounded-md md:rounded-lg shadow-sm md:px-2'>

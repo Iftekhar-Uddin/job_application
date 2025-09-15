@@ -75,7 +75,7 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
           </div>
         </div>
 
-        <p className="pt-4 grid-cols-1 grid text-gray-700 font-sans text-justify md:text-base">
+        <p className="pt-2 grid-cols-1 grid text-gray-700 font-sans text-justify md:text-base">
           <span className="font-semibold md:text-lg mb-1 ">Responsibilities & Context: </span>
           {job?.responsibilities}
         </p>
@@ -88,7 +88,7 @@ const jobDetails = async ({ params }: { params: Promise<{ id: string }> }) => {
           {job?.benefits.map((single) =>
             <li key={single} className="text-gray-600 list-inside list-disc">{single}</li>)}
         </ul>
-        <div className="md:flex justify-between items-center font-sans space-y-1">
+        <div className="md:flex justify-between items-center font-sans">
 
           {/* <div className="w-2/5 flex justify-end">
             <div className="">

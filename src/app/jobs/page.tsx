@@ -97,29 +97,29 @@ const TotalJobs = async ({ searchParams }: { searchParams: Promise<{ [key: strin
           }
           {AvailableJobs.map((job) => (
             <div key={job.id}
-              className="w-72 md:w-[380px] md:min-h-[150px] ring-1 ring-cyan-700 rounded-sm md:rounded-lg md:p-2 md:gap-x-4 md:gap-y-2"
+              className="w-72 md:w-[380px] md:min-h-[150px] ring-1 ring-cyan-700 rounded-sm md:rounded-lg md:p-2 md:gap-x-4 md:gap-y-2 p-1 hover:shadow-lg hover:scale-[1.02] transition-all duration-200 ease-in-out"
             >
-              <div className="flex px-1.5 pt-1.5 md:px-0 w-full justify-between">
+              <div className="flex px-1.5 pt-1.5 text-orange-500 md:px-0 w-full justify-between">
                 <h1 className="font-bold md:text-xl">{job.title}</h1>
                 <Link
                   href={`/jobs/${job.id}`}
-                  className="text-cyan-800 underline text-sm md:text-md cursor-pointer hover:text-blue-800"
+                  className="text-blue-500 underline text-sm md:text-md cursor-pointer hover:text-black"
                 >
                   View Details
                 </Link>
               </div>
 
-              <h1 className="px-1.5 pt-1.5 md:px-0  text-blue-500 text-sm md:text-md">{job.company}</h1>
+              <h1 className="px-1.5 md:px-0  text-cyan-700 text-sm">{job.company}</h1>
 
-              <div className="flex px-1.5 pt-1.5 md:px-0 w-full justify-between md:mt-2">
+              <div className="flex px-1.5 pt-1.5 md:px-0 w-full justify-between md:mt-4">
 
-                <div className="md:space-y-1">
-                  <h2 className="text-amber-600">Salary: {job.salary}</h2>
-                  <p className="line-clamp-2">
+                <div className="text-sm md:text-base">
+                  <h2 className="">Salary: {job.salary}</h2>
+                  <p className="line-clamp-2 text-red-500">
                     {`Type: ${job.type}`}
                   </p>
                 </div>
-                <div className="md:space-y-1">
+                <div className="text-right text-sm md:text-base">
                   <p className="text-teal-600">Exp: {job.experience}</p>
                   <p className="line-clamp-2 text-gray-600">
                     {job.deadline && `Deadline: ${new Date(job.deadline).toLocaleDateString()}`}

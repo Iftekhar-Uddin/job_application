@@ -47,7 +47,7 @@ export default async function Home() {
                 {job.title}
               </h3>
               <p className="text-emerald-600 md:mb-2 text-xs">{job.company}</p>
-              <div className="flex justify-between text-sm md:text-base my-2 md:min-h-12">
+              <div className="flex text-sm md:text-base my-2 md:min-h-12">
                 <span className="mr-4 text-cyan-800">{job.location}</span>
                 <span className="text-red-400">{job.type}</span>
               </div>
