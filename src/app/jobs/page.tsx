@@ -46,7 +46,6 @@ const TotalJobs = async ({ searchParams }: { searchParams: Promise<{ [key: strin
 
   let today = new Date();
   const AvailableJobs = jobs.filter((job) => new Date(job?.deadline as Date) > today);
-  console.log(AvailableJobs);
 
   return (
     <div className="">
