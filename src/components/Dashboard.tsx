@@ -27,28 +27,28 @@ const Dashboard = ({ postedJobs, applications }: DashboardProps) => {
   
   return (
     <div className="max-w-7xl mx-auto rounded-md sm:px-6 lg:px-0 h-[calc(100vh-10rem)]">
-      <div className="bg-white rounded-lg flex flex-col mb-3 pt-1 font-sans">
+      <div className="bg-white rounded-sm md:rounded-lg flex flex-col mb-3 pt-1 font-sans">
         <h1 className="text-xl md:text-3xl font-semibold md:font-bold text-cyan-700 flex justify-center">
           Dashboard
         </h1>
         <div className="flex justify-around items-center pb-2">
-          <button onClick={handleAvailableJobs} className={`${isPostedJob ? "underline" : ""}    md:text-xl text-amber-600 text-sm md:underline`}>Available Jobs</button>
-          <button onClick={handleApplications} className={`${isapplications ? "underline" : ""}  md:text-xl text-green-600 text-sm md:underline`}>Your Applications</button>
+          <button disabled={isPostedJob} onClick={handleAvailableJobs} className={`${isPostedJob ? "underline" : ""}    md:text-xl text-amber-600 text-sm md:underline`}>Available Jobs</button>
+          <button disabled={isapplications} onClick={handleApplications} className={`${isapplications ? "underline" : ""}  md:text-xl text-green-600 text-sm md:underline`}>Your Applications</button>
         </div>
       </div>
 
-      <div className="grid gap-2 md:grid-cols-2">
+      <div className="grid md:gap-2 md:grid-cols-2">
         {/* Posted Jobs Section */}
         
-        <div className='bg-white rounded-md md:rounded-lg shadow-sm md:px-2'>
-          <div className="h-fit divide-y divide-gray-300 overflow-y-scroll">
+        <div className='bg-white rounded-sm md:rounded-lg shadow-sm md:px-2'>
+          <div className="h-fit divide-y divide-gray-300">
             {postedJobs?.length === 0 ? (
-              <p className="p-6 text-gray-500 text-center">
+              <p className={`${isPostedJob ? "block" : "hidden"} p-6 text-amber-600 text-center md:block`}>
                 You haven't posted any jobs yet.
               </p>
             ) : (
               postedJobs?.map((job: any) => (
-                <div key={job.id} className= {`${isPostedJob ? "block" : "hidden"} md:p-4 p-3 md:block`}>
+                <div key={job.id} className= {`${isPostedJob ? "block" : "hidden"} md:p-4 p-3 md:block overflow-y-scroll`}>
                   <div className="flex justify-between items-start md:gap-x-4">
                     <div>
                       <h3 className="md:text-lg md:mb-1">
@@ -90,15 +90,15 @@ const Dashboard = ({ postedJobs, applications }: DashboardProps) => {
         {/* Applications Section */}
 
 
-        <div className='bg-white rounded-lg shadow-sm md:px-2'>
-          <div className="h-full divide-y divide-gray-300 overflow-y-scroll ">
+        <div className='bg-white rounded-sm md:rounded-lg shadow-sm md:px-2'>
+          <div className="h-fit divide-y divide-gray-300 ">
             {applications?.length === 0 ? (
-              <p className="p-6 text-gray-500 text-center">
+              <p className={`${isapplications ? "block" : "hidden"} p-6 text-green-600 text-center md:block`}>
                 You haven't applied to any jobs yet.
               </p>
             ) : (
               applications?.map((application: any) => (
-                <div key={application?.id} className={`${isapplications ? "block" : "hidden"} md:p-4 p-3 md:block`}>
+                <div key={application?.id} className={`${isapplications ? "block" : "hidden"} md:p-4 p-3 md:block overflow-y-scroll`}>
 
                   <div className="flex justify-between items-start md:gap-x-4">
                     <div>

@@ -4,6 +4,10 @@ import Link from "next/link";
 import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
+import toast from "react-hot-toast";
+
 
 const FormSchema = z.object({
     name: z.string().nonempty("Username is required").min(1, "Name is required").max(50, "Name must be less than 50 characters"),
@@ -17,7 +21,13 @@ const FormSchema = z.object({
 
 
 const SignUp = () => {
-    
+
+    const { data: session, status } = useSession();
+
+    if (session) {
+        redirect("/")
+    }
+
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
@@ -45,16 +55,16 @@ const SignUp = () => {
             }
 
             const result = await response.json();
-            alert(result.message);
+            toast.success(result.message);
             window.location.href = "/auth/signin";
         } catch (error) {
-            console.error("Error creating user:", error);
-            alert("Failed to create user. Please try again.");
+            // console.error("Error creating user:", error);
+            toast.error(`${error}`);
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-[calc(100vh-10rem)]">
+        <div className="flex justify-center items-center min-h-[450px] md:min-h-[550px]">
             <div className="grid grid-rows-1 gap-2 md:gap-4 max-h-fit w-auto bg-white p-4 md:p-8 rounded-md md:rounded-xl ">
                 <div className="flex flex-col items-center md:space-y-2">
                     <h1 className="text-cyan-700 md:font-bold text-xl md:text-4xl">Register</h1>
@@ -73,7 +83,7 @@ const SignUp = () => {
                     <input {...form.register("confirmPassword")} type="password" placeholder="Confirm Password" className="w-full px-2 md:px-4 py-1 md:py-2 border border-gray-400 rounded-md md:rounded-lg focus:outline-none focus:ring-1 md:focus:ring-2 focus:ring-cyan-700 text-sm md:text-base" />
                     {form.formState.errors.confirmPassword && <span className="text-red-500">{form.formState.errors.confirmPassword.message}</span>}
 
-                    <button type="submit" className="rounded-md w-full mt-2 py-1 md:py-2 text-sm md:text-base bg-black text-white cursor-pointer">Sign Up</button>
+                    <button type="submit" className="rounded-md w-full mt-2 py-2 text-sm md:text-base bg-black text-white cursor-pointer">Sign Up</button>
                 </form>
                 <div className="flex min-w-full justify-center">
                     <p className="w-72 text-xs md:text-sm text-end">

@@ -8,6 +8,8 @@ import { cookies } from "next/headers";
 import bcrypt from 'bcryptjs';
 // import { signIn } from "../../../../auth";
 import { redirect} from "next/navigation";
+import { generateVerificationToken } from "@/data/token";
+import { sendVerificationEmaill } from "@/data/mail";
 
 
 
@@ -47,17 +49,24 @@ export async function POST(request: Request) {
             }
         });
 
+        const verificationToken = await generateVerificationToken(email);
+
+        await sendVerificationEmaill(email, verificationToken.token)
+
         if (!newUser) {
             return NextResponse.json({ user: null, message: "Failed to create user" }, { status: 500 });
         }
 
-        return NextResponse.json({ user: newUser, message: "User created successfully" }, { status: 201 });
+        return NextResponse.json({ user: newUser, message: "Confirmation email sent!" }, { status: 201 });
 
     } catch (error) {
         return NextResponse.json({ user: null, message: "Internal server error" }, { status: 500 });
     }
     
 };
+
+
+
 
 
 // const secretkey = process.env.JWT_SECRET;

@@ -2,20 +2,21 @@ import { redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { auth } from '@/lib/auth';
 import Dashboard from '@/components/Dashboard';
+import { generateVerificationToken } from '@/data/token';
+import { getUserByEmail } from '../../data/route';
 
 
 const DashboardPage = async () => {
-  
   const session = await auth();
 
   if (!session) {
-    redirect("/")
+    redirect("/auth/signin")
   };
 
-  const [ postedJobs, applications ] = await Promise.all([
+  const [postedJobs, applications] = await Promise.all([
     prisma.job.findMany({
       where: {
-        postedById: session.user?.id
+        postedById: session?.user?.id
       },
       include: {
         _count: {
@@ -44,12 +45,12 @@ const DashboardPage = async () => {
         appliedAt: "desc"
       },
     }),
-    
+
   ]);
 
 
   return (
-    <Dashboard postedJobs={postedJobs} applications={applications}/>
+    <Dashboard postedJobs={postedJobs} applications={applications} />
   );
 
 }
